@@ -2,8 +2,9 @@ import math
 
 import pygame
 
-from game_objects.game_object import GameObject
+from game_objects.game_objects import GameObject
 from systems.vectors import Vector2D
+
 
 
 class Laser(GameObject):

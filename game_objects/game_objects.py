@@ -9,7 +9,7 @@ class GameObject:
     def update(self):
         self.position.add(self.velocity)
 
-    def draw(self):
+    def draw(self, view):
         pass
 
     def wrap_around(self, width, height):
