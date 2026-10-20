@@ -9,6 +9,10 @@ class Vector2D:
         self.x += vector.x
         self.y += vector.y
 
+    def substract(self, vector):
+        self.x -= vector.x
+        self.y -= vector.y
+
     def multiply(self, scalar):
         self.x *= scalar
         self.y *= scalar
@@ -17,4 +21,6 @@ class Vector2D:
         return math.sqrt(self.x**2+self.y**2)
 
     def distance_to(self, vector):
-        return math.sqrt((vector.x - self.x)**2 + (vector.y - self.y)**2)
+        diff_x = self.x - vector.x
+        diff_y = self.y - vector.y
+        return Vector2D(diff_x, diff_y).magnitude()
