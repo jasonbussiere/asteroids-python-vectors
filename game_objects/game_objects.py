@@ -9,6 +9,7 @@ class GameObject:
         self.velocity = Vector2D(0, 0)
         self.color = color
         self.radius = radius
+        self.is_destroyed=False
 
     def update(self):
         self.position += self.velocity
@@ -39,3 +40,9 @@ class GameObject:
 
     def hit_by_ship(self, ship):
         pass
+
+    def is_alive(self):
+        return not self.is_destroyed
+
+    def destroy(self):
+        self.is_destroyed=True

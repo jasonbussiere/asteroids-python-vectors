@@ -30,20 +30,15 @@ class Laser(GameObject):
     def wrap_around(self, width, height):
         pass
 
-    def is_alive(self):
-        return self.lifetime > 0
-
     def update(self):
         super().update()
         self.lifetime -= 1
+        if self.lifetime <= 0:
+            super().destroy()
 
     def on_impact_with(self, other):
         other.hit_by_laser(self)
 
-    def destroy(self):
-        self.lifetime=0
-
     def hit_by_asteroid(self, asteroid):
-        asteroid.split()
         self.destroy()
 

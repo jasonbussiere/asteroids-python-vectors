@@ -15,6 +15,8 @@ class Asteroid(GameObject):
         speed=random.uniform(1.0, 3.0)
         radians=math.radians(angle)
         self.velocity=Vector2D(math.cos(radians) * speed, math.sin(radians) * speed)
+        self.fragments=[]
+        self.scored=False
 
     def draw(self, view):
         pygame.draw.circle(
@@ -42,8 +44,12 @@ class Asteroid(GameObject):
         other.hit_by_asteroid(self)
 
     def hit_by_laser(self, laser):
-        self.split()
-        laser.destroy()
+        self.destroy()
+        self.fragments = self.split()
+        self.scored=True
+        self.point_value=(6000/max(1, self.radius))
+
+    
 
 
     

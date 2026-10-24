@@ -90,3 +90,9 @@ class Ship(GameObject):
         if keys[pygame.K_SPACE] and self.laser_cooldown == 0:
             self.laser_cooldown=self.laser_cooldown_delay
             return self.shoot()
+
+    def on_impact_with(self, other):
+        other.hit_by_ship(self)
+
+    def hit_by_asteroid(self, asteroid):
+        self.destroy()
