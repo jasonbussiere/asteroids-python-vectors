@@ -1,11 +1,8 @@
-import math
 
 import pygame
 
-from core.constants import LASER_COLOR, LASER_LIFETIME, LASER_SIZE, LASER_SPEED, VIEW_HEIGHT, VIEW_WIDTH
+from core.constants import LASER_COLOR, LASER_LIFETIME, LASER_RADIUS
 from game_objects.game_objects import GameObject
-
-
 
 class Laser(GameObject):
     def __init__(
@@ -14,31 +11,24 @@ class Laser(GameObject):
             y,
             velocity,
             laser_color=LASER_COLOR,
-            laser_size=LASER_SIZE,
+            laser_size=LASER_RADIUS,
             laser_lifetime=LASER_LIFETIME
         ):
         
-        super().__init__(x, y, color=laser_color, size=laser_size)
+        super().__init__(x, y, color=laser_color, radius=laser_size)
         self.velocity = velocity
         self.lifetime = laser_lifetime
-        self.laser_color = laser_color
-        self.laser_size = laser_size
 
     def draw(self, view):
         pygame.draw.circle(
             view,
-            self.laser_color,
+            self.color,
             (int(self.position.x), int(self.position.y)),
-            self.laser_size
+            self.radius
         )
 
-    def is_out_of_bounds(self):
-        return (
-            self.position.x < 0
-            or self.position.x > VIEW_WIDTH
-            or self.position.y < 0
-            or self.position.y > VIEW_HEIGHT
-        )
+    def wrap_around(self, width, height):
+        pass
 
     def is_alive(self):
         return self.lifetime > 0
@@ -46,4 +36,14 @@ class Laser(GameObject):
     def update(self):
         super().update()
         self.lifetime -= 1
+
+    def on_impact_with(self, other):
+        other.hit_by_laser(self)
+
+    def destroy(self):
+        self.lifetime=0
+
+    def hit_by_asteroid(self, asteroid):
+        asteroid.split()
+        self.destroy()
 

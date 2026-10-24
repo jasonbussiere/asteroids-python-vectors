@@ -7,6 +7,8 @@ from game_objects.asteroid import Asteroid
 
 from game_objects.laser import Laser
 from game_objects.ship import Ship
+from systems import colisions
+
 
 #intialize pygame engine
 pygame.init()
@@ -16,15 +18,16 @@ clock=pygame.time.Clock()
 
 #instantiate game objects
 ship=Ship(view.get_width()/2, view.get_height()/2)
-asteroids={
+asteroids=[
     Asteroid(100, 100),
     Asteroid(VIEW_WIDTH-100, 100),
     Asteroid(100, VIEW_HEIGHT-100),
     Asteroid(VIEW_WIDTH-100, VIEW_HEIGHT-100)
-}
+]
 lasers:list[Laser]= []
 
 #game loop
+game_over=False
 running = True
 while running:
     #handle quit event
@@ -50,6 +53,13 @@ while running:
     for laser in lasers:
         laser.update()
 
+# **** collision system todo ****
+
+    
+
+
+    
+
     #clear screen
     view.fill((0,0,0))
 
@@ -63,7 +73,7 @@ while running:
         laser.draw(view)
 
     lasers=[laser for laser in lasers if laser.is_alive() ]
-    
+
     #update the screen
     pygame.display.flip()
 

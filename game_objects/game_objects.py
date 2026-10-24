@@ -1,4 +1,3 @@
-import math
 
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
 from systems.vectors import Vector2D
@@ -12,15 +11,31 @@ class GameObject:
         self.radius = radius
 
     def update(self):
-        self.position.add(self.velocity)
+        self.position += self.velocity
         self.wrap_around(VIEW_WIDTH, VIEW_HEIGHT)
 
     def draw(self, view):
-        pass
+        raise NotImplementedError("subclasses of GameObjects must implement draw()")
 
     def wrap_around(self, width, height):
         self.position.x %= width
         self.position.y %= height
 
-    def collides_with(self,other):
-        distance = math.sqrt((self.position.x - other.postion.x)**2 + (self.position.y - other.positon.y)**2)
+    def has_collided_with(self,other:'GameObject'):
+        distance_sqared=self.position.distance_to_squared(other.position)
+        radii_sum_squared=(self.radius + other.radius)**2
+        return distance_sqared < radii_sum_squared
+
+    # double dispatch entry point
+    def on_impact_with(self, other:'GameObject'):
+        pass
+
+    # default handlers , subclasses override as needed
+    def hit_by_laser(self, laser):
+        pass
+
+    def hit_by_asteroid(self, asteroid):
+        pass
+
+    def hit_by_ship(self, ship):
+        pass

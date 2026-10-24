@@ -2,9 +2,7 @@ import math
 
 import pygame
 
-
-
-from core.constants import FRICTION, LASER_COOLDOWN_DELAY, LASER_SPEED, SHIP_COLOR, SHIP_RADIUS, SHIP_SIZE, THRUST_POWER, TURN_AMOUNT
+from core.constants import FRICTION, LASER_COOLDOWN_DELAY, LASER_SPEED, SHIP_COLOR, SHIP_RADIUS, THRUST_POWER, TURN_AMOUNT
 from game_objects.game_objects import GameObject
 from game_objects.laser import Laser
 from systems.vectors import Vector2D
@@ -42,9 +40,9 @@ class Ship(GameObject):
 
         acceleration_vector = Vector2D(accel_x, accel_y)
 
-        self.velocity.add(acceleration_vector)
+        self.velocity += acceleration_vector
 
-    def turn_left(self, amount):
+    def turn_left(self, amount=TURN_AMOUNT):
         self.rotation -= amount
 
     def turn_right(self, amount=TURN_AMOUNT):
@@ -52,31 +50,31 @@ class Ship(GameObject):
 
     def shoot(self):
 
+        print("pew pew!")
+        
         radians=math.radians(self.rotation)
         
-        dir_x = math.cos(radians)
-        dir_y = math.sin(radians)
+        dir_x = math.sin(radians)
+        dir_y = -math.cos(radians)
         
         laser_velocity=Vector2D(dir_x, dir_y)
 
-        laser_velocity.multiply(self.laser_speed)
+        laser_velocity *= self.laser_speed
 
         return Laser(self.position.x, self.position.y, laser_velocity)
 
     def update(self):
-        self.velocity.multiply(self.friction)
+        self.velocity *= self.friction
         super().update()
         if self.laser_cooldown > 0:
             self.laser_cooldown -= 1
-
-        print("DEBUG: ",self.velocity.x, self.velocity.y)
 
     def draw(self, view):
         pygame.draw.circle(
             view,
             self.color,
             (int(self.position.x), int(self.position.y)),
-            self.size
+            self.radius
         )
 
     def handle_input(self, keys):

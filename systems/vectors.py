@@ -5,22 +5,36 @@ class Vector2D:
         self.x=x
         self.y=y
 
-    def add(self, vector):
-        self.x += vector.x
-        self.y += vector.y
+    def __add__(self, other):
+        return Vector2D(self.x + other.x, self.y + other.y)
 
-    def substract(self, vector):
-        self.x -= vector.x
-        self.y -= vector.y
+    def __sub__(self, other):
+        return Vector2D(self.x - other.x, self.y - other.y)
 
-    def multiply(self, scalar):
-        self.x *= scalar
-        self.y *= scalar
+    def __iadd__(self, other):
+        self.x += other.x
+        self.y += other.y
+        return self
 
+    def __isub__(self, other):
+        self.x -= other.x
+        self.y -= other.y
+        return self
+
+    def __mul__(self, scalar):
+        return Vector2D(self.x*scalar, self.y*scalar)
+    
     def magnitude(self):
         return math.sqrt(self.x**2+self.y**2)
 
-    def distance_to(self, vector):
-        diff_x = self.x - vector.x
-        diff_y = self.y - vector.y
-        return Vector2D(diff_x, diff_y).magnitude()
+    def distance_to(self, other):
+        diff_x = self.x - other.x
+        diff_y = self.y - other.y
+        return math.sqrt(diff_x**2+diff_y**2)
+
+    def distance_to_squared(self, other):
+        diff_x = self.x - other.x
+        diff_y = self.y - other.y
+        return diff_x**2 + diff_y**2
+
+    
