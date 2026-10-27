@@ -32,7 +32,7 @@ class Ship(GameObject):
 
         self.laser_cooldown=0
 
-    def thrust(self):
+    def thrust(self, delta_time):
         radians=math.radians(self.rotation)
 
         accel_x=math.sin(radians) * self.thrust_power
@@ -40,7 +40,7 @@ class Ship(GameObject):
 
         acceleration_vector = Vector2D(accel_x, accel_y)
 
-        self.velocity += acceleration_vector
+        self.velocity += acceleration_vector * delta_time
 
     def turn_left(self, amount=TURN_AMOUNT):
         self.rotation -= amount
@@ -63,11 +63,11 @@ class Ship(GameObject):
 
         return Laser(self.position.x, self.position.y, laser_velocity)
 
-    def update(self):
-        self.velocity *= self.friction
-        super().update()
+    def update(self, delta_time):
+        self.velocity *= self.friction ** delta_time
+        super().update(delta_time)
         if self.laser_cooldown > 0:
-            self.laser_cooldown -= 1
+            self.laser_cooldown -= delta_time
 
     def draw(self, view):
         pygame.draw.circle(
@@ -77,7 +77,7 @@ class Ship(GameObject):
             self.radius
         )
 
-    def handle_input(self, keys):
+    def handle_input(self, keys, delta_time):
         if keys[pygame.K_LEFT]:
             self.turn_left(TURN_AMOUNT)
 
@@ -85,9 +85,9 @@ class Ship(GameObject):
             self.turn_right(TURN_AMOUNT)
 
         if keys[pygame.K_UP]:
-            self.thrust()
+            self.thrust(delta_time)
 
-        if keys[pygame.K_SPACE] and self.laser_cooldown == 0:
+        if keys[pygame.K_LSHIFT] and self.laser_cooldown <= 0:
             self.laser_cooldown=self.laser_cooldown_delay
             return self.shoot()
 

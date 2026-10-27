@@ -1,4 +1,5 @@
-
+from __future__ import annotations
+from abc import abstractmethod
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
 from systems.vectors import Vector2D
 
@@ -11,8 +12,12 @@ class GameObject:
         self.radius = radius
         self.is_destroyed=False
 
-    def update(self):
-        self.position += self.velocity
+        self.fragments=[]
+        self.scored=False
+        self.point_value=0
+
+    def update(self, delta_time):
+        self.position += self.velocity * delta_time
         self.wrap_around(VIEW_WIDTH, VIEW_HEIGHT)
 
     def draw(self, view):
@@ -22,27 +27,30 @@ class GameObject:
         self.position.x %= width
         self.position.y %= height
 
-    def has_collided_with(self,other:'GameObject'):
+    def has_collided_with(self,other:GameObject)-> None:
         distance_sqared=self.position.distance_to_squared(other.position)
         radii_sum_squared=(self.radius + other.radius)**2
         return distance_sqared < radii_sum_squared
 
+    def destroy(self):
+        self.is_destroyed=True
+
     # double dispatch entry point
-    def on_impact_with(self, other:'GameObject'):
+    @abstractmethod
+    def on_impact_with(self, other:GameObject) -> None:
         pass
 
     # default handlers , subclasses override as needed
-    def hit_by_laser(self, laser):
+    @abstractmethod
+    def hit_by_laser(self, laser:GameObject)-> None:
         pass
 
-    def hit_by_asteroid(self, asteroid):
+    @abstractmethod
+    def hit_by_asteroid(self, asteroid:GameObject)-> None:
         pass
 
-    def hit_by_ship(self, ship):
+    @abstractmethod
+    def hit_by_ship(self, ship:GameObject)-> None:
         pass
 
-    def is_alive(self):
-        return not self.is_destroyed
-
-    def destroy(self):
-        self.is_destroyed=True
+    

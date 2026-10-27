@@ -4,19 +4,20 @@ import random
 import pygame
 
 from core.constants import AST_COLOR, AST_LG_RADIUS, RADIUS_LOWER_LIMIT
+
 from game_objects.game_objects import GameObject
 from systems.vectors import Vector2D
-
-
 class Asteroid(GameObject):
     def __init__(self, x, y,ast_color=AST_COLOR, ast_size=AST_LG_RADIUS):
         super().__init__(x, y, color=ast_color, radius=ast_size)
         angle=random.uniform(0,360)
-        speed=random.uniform(1.0, 3.0)
+        speed=random.uniform(60.0, 180.0)
         radians=math.radians(angle)
         self.velocity=Vector2D(math.cos(radians) * speed, math.sin(radians) * speed)
-        self.fragments=[]
-        self.scored=False
+
+    @staticmethod
+    def create_random_at(position:Vector2D)-> 'Asteroid':
+        return Asteroid(position.x, position.y, ast_color=AST_COLOR, ast_size=AST_LG_RADIUS)
 
     def draw(self, view):
         pygame.draw.circle(
@@ -47,7 +48,7 @@ class Asteroid(GameObject):
         self.destroy()
         self.fragments = self.split()
         self.scored=True
-        self.point_value=(6000/max(1, self.radius))
+        self.point_value=int(6000/max(1, self.radius))
 
     
 

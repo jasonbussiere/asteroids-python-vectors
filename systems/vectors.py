@@ -28,13 +28,11 @@ class Vector2D:
         return math.sqrt(self.x**2+self.y**2)
 
     def distance_to(self, other):
-        diff_x = self.x - other.x
-        diff_y = self.y - other.y
-        return math.sqrt(diff_x**2+diff_y**2)
-
+        difference_vector=self-other
+        return difference_vector.magnitude()
+    
     def distance_to_squared(self, other):
-        diff_x = self.x - other.x
-        diff_y = self.y - other.y
-        return diff_x**2 + diff_y**2
+        difference_vector=self-other
+        return difference_vector.x**2 + difference_vector.y**2
 
     

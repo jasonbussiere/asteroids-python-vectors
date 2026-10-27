@@ -30,8 +30,8 @@ class Laser(GameObject):
     def wrap_around(self, width, height):
         pass
 
-    def update(self):
-        super().update()
+    def update(self, delta_time):
+        super().update(delta_time)
         self.lifetime -= 1
         if self.lifetime <= 0:
             super().destroy()
