@@ -12,7 +12,7 @@ class UIManager:
         
         if is_game_over:
             game_over_surface=self.ui_font.render("G A M E  O V E R", True, (255,0,0))
-            restart_surface=self.restart_font.render("Press space to restart or escape to quit", True, (255,255,255))
+            restart_surface=self.restart_font.render("Press space to restart ", True, (255,255,255))
             text_x=(view.get_width() - game_over_surface.get_width()) /2
             text_y=(view.get_height() - game_over_surface.get_height()) /2
             view.blit(game_over_surface, (text_x, text_y))

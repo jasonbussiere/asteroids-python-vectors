@@ -26,12 +26,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running=False
-
-    if keys[pygame.K_ESCAPE]:
-        running=False
-
-    elif keys[pygame.K_SPACE] and game_manager.is_game_over:
-        game_manager.init_game_objects()
+        elif keys[pygame.K_SPACE] and game_manager.is_game_over:
+            game_manager.init_game_objects()
 
     game_manager.process_inputs(keys, delta_time)
     # Update movement

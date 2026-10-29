@@ -1,4 +1,5 @@
 import math
+import random
 
 import pygame
 
@@ -14,7 +15,7 @@ class Ship(GameObject):
             y,
             ship_color=SHIP_COLOR,
             ship_radius=SHIP_RADIUS,
-            rotation=0,
+            angle=0,
             friction=FRICTION,
             thrust_power=THRUST_POWER,
             laser_speed=LASER_SPEED,
@@ -23,7 +24,7 @@ class Ship(GameObject):
 
         super().__init__(x, y, color=ship_color, radius=ship_radius )
 
-        self.rotation=rotation
+        self.angle=angle
         self.friction=friction
         self.thrust_power=thrust_power
 
@@ -31,9 +32,58 @@ class Ship(GameObject):
         self.laser_cooldown_delay=laser_cooldown_delay
 
         self.laser_cooldown=0
+        self.is_accelerating=False
+
+    def get_thruster_vertices(self):
+        left_anchor=Vector2D(-self.radius * 0.4, self.radius * 0.8).rotate(self.angle)
+        right_anchor=Vector2D(self.radius * 0.4, self.radius * 0.8).rotate(self.angle)
+
+        flame_length=self.radius * random.uniform(1.3, 1.7)
+        flame_tip=Vector2D(0, flame_length).rotate(self.angle)
+
+        left_anchor_pos=self.position + left_anchor
+        right_anchor_pos=self.position + right_anchor
+        flame_tip_pos = self.position + flame_tip
+
+        return [
+            (left_anchor_pos.x, left_anchor_pos.y),
+            (flame_tip_pos.x, flame_tip_pos.y),
+            (right_anchor_pos.x, right_anchor_pos.y)
+        ]
+
+    def get_inner_thruster_vertices(self):
+            left_anchor=Vector2D(-self.radius * 0.2, self.radius * 0.8).rotate(self.angle)
+            right_anchor=Vector2D(self.radius * 0.2, self.radius * 0.8).rotate(self.angle)
+    
+            flame_length=self.radius * random.uniform(0.8, 1.1)
+            flame_tip=Vector2D(0, flame_length).rotate(self.angle)
+    
+            left_anchor_pos=self.position + left_anchor
+            right_anchor_pos=self.position + right_anchor
+            flame_tip_pos = self.position + flame_tip
+    
+            return [
+                (left_anchor_pos.x, left_anchor_pos.y),
+                (flame_tip_pos.x, flame_tip_pos.y),
+                (right_anchor_pos.x, right_anchor_pos.y)
+            ]
+    
+    def get_vertices(self):
+        nose = Vector2D(0, -self.radius).rotate(self.angle)
+        left_fin = Vector2D(-self.radius * 0.8, self.radius * 0.8).rotate(self.angle)
+        right_fin = Vector2D(self.radius * 0.8, self.radius * 0.8).rotate(self.angle)
+
+        nose_pos=self.position + nose
+        left_pos=self.position + left_fin
+        right_pos=self.position + right_fin
+        return [
+            (nose_pos.x, nose_pos.y),
+            (left_pos.x, left_pos.y),
+            (right_pos.x, right_pos.y)
+        ]
 
     def thrust(self, delta_time):
-        radians=math.radians(self.rotation)
+        radians=math.radians(self.angle)
 
         accel_x=math.sin(radians) * self.thrust_power
         accel_y=-math.cos(radians) * self.thrust_power
@@ -43,16 +93,16 @@ class Ship(GameObject):
         self.velocity += acceleration_vector * delta_time
 
     def turn_left(self, amount=TURN_AMOUNT):
-        self.rotation -= amount
+        self.angle -= amount
 
     def turn_right(self, amount=TURN_AMOUNT):
-        self.rotation += amount
+        self.angle += amount
 
     def shoot(self):
 
         print("pew pew!")
         
-        radians=math.radians(self.rotation)
+        radians=math.radians(self.angle)
         
         dir_x = math.sin(radians)
         dir_y = -math.cos(radians)
@@ -70,14 +120,33 @@ class Ship(GameObject):
             self.laser_cooldown -= delta_time
 
     def draw(self, view):
-        pygame.draw.circle(
+        print(self.is_accelerating)
+        if self.is_accelerating:
+            flame_color=(255, 140, 0)
+            pygame.draw.polygon(
+                view,
+                flame_color,
+                self.get_thruster_vertices(),
+                2
+            )
+
+            inner_flame_color=(255, 240, 0)
+            pygame.draw.polygon(
+                view,
+                inner_flame_color,
+                self.get_inner_thruster_vertices(),
+                
+            )
+            
+        pygame.draw.polygon(
             view,
             self.color,
-            (int(self.position.x), int(self.position.y)),
-            self.radius
+            self.get_vertices()
         )
 
     def handle_input(self, keys, delta_time):
+        self.is_accelerating=False
+
         if keys[pygame.K_LEFT]:
             self.turn_left(TURN_AMOUNT)
 
@@ -85,11 +154,14 @@ class Ship(GameObject):
             self.turn_right(TURN_AMOUNT)
 
         if keys[pygame.K_UP]:
+            self.is_accelerating=True
             self.thrust(delta_time)
 
-        if keys[pygame.K_LSHIFT] and self.laser_cooldown <= 0:
+        new_laser=[]
+        if keys[pygame.K_SPACE] and self.laser_cooldown <= 0:
             self.laser_cooldown=self.laser_cooldown_delay
-            return self.shoot()
+            new_laser=self.shoot()
+            return new_laser
 
     def on_impact_with(self, other):
         other.hit_by_ship(self)

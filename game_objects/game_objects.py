@@ -4,7 +4,7 @@ from core.constants import VIEW_HEIGHT, VIEW_WIDTH
 from systems.vectors import Vector2D
 
 
-class GameObject:
+class GameObject():
     def __init__(self, x, y, color, radius):
         self.position = Vector2D(x, y)
         self.velocity = Vector2D(0, 0)

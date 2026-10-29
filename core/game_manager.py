@@ -2,6 +2,7 @@ from __future__ import annotations
 import random
 
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
+from core.particle_manager import ParticleManager
 from game_objects.asteroid import Asteroid
 from game_objects.game_objects import GameObject
 from game_objects.laser import Laser
@@ -18,6 +19,7 @@ class GameManager:
         self.game_objects: list[GameObject]=[]
         self.score=0
         self.is_game_over=False
+        self.particle_manager=ParticleManager()
 
     def init_game_objects(self):
         # Track game state
@@ -71,10 +73,16 @@ class GameManager:
 
         for obj in self.game_objects:
             if obj.is_destroyed:
+                particle_count=12 if obj.radius<20 else 25
+                self.particle_manager.create_explosion(
+                    position=obj.position,
+                    count=particle_count,
+                    color=(220,220,220)
+                )
                 if obj.scored:
-                    self.score += getattr(obj, 'point_value', 0)
+                    self.score += obj.point_value
 
-                if obj.fragments==None:
+                if obj.fragments is not None:
                     surviving_objects.extend(obj.fragments)
             else:
                 surviving_objects.append(obj)
@@ -82,6 +90,11 @@ class GameManager:
         self.game_objects=surviving_objects
 
         if self.ship and self.ship.is_destroyed:
+            self.particle_manager.create_explosion(
+                position=self.ship.position,
+                count=35,
+                color=(255, 60, 0)
+            )
             self.ship = None
             self.is_game_over=True
 
@@ -89,6 +102,10 @@ class GameManager:
         for obj in self.game_objects:
             obj.draw(view)
 
+        self.particle_manager.draw(view)
+
     def update(self, delta_time: float):
         for obj in self.game_objects:
             obj.update(delta_time)
+
+        self.particle_manager.update(delta_time)

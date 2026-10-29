@@ -3,12 +3,11 @@ import random
 
 import pygame
 
-from core.constants import AST_COLOR, AST_LG_RADIUS, RADIUS_LOWER_LIMIT
-
+import core.constants
 from game_objects.game_objects import GameObject
 from systems.vectors import Vector2D
 class Asteroid(GameObject):
-    def __init__(self, x, y,ast_color=AST_COLOR, ast_size=AST_LG_RADIUS):
+    def __init__(self, x, y,ast_color=core.constants.AST_COLOR, ast_size=core.constants.AST_LG_RADIUS):
         super().__init__(x, y, color=ast_color, radius=ast_size)
         angle=random.uniform(0,360)
         speed=random.uniform(60.0, 180.0)
@@ -17,7 +16,7 @@ class Asteroid(GameObject):
 
     @staticmethod
     def create_random_at(position:Vector2D)-> 'Asteroid':
-        return Asteroid(position.x, position.y, ast_color=AST_COLOR, ast_size=AST_LG_RADIUS)
+        return Asteroid(position.x, position.y, ast_color=core.constants.AST_COLOR, ast_size=core.constants.AST_LG_RADIUS)
 
     def draw(self, view):
         pygame.draw.circle(
@@ -30,7 +29,7 @@ class Asteroid(GameObject):
 
     def split(self):
 
-        if self.radius < RADIUS_LOWER_LIMIT:
+        if self.radius < core.constants.MIN_AST_RADIUS:
             return []
 
         new_radius = self.radius / 2
