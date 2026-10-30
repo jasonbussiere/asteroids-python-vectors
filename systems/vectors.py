@@ -44,10 +44,12 @@ class Vector2D:
         difference_vector=self-other
         return difference_vector.x**2 + difference_vector.y**2
 
-    def rotate(self, angle)->'Vector2D':
+    def rotate(self, angle: float)->'Vector2D':
         radians=math.radians(angle)
         cos_a=math.cos(radians)
         sin_a=math.sin(radians)
+
+        #2d rotation matrix
         x=self.x * cos_a - self.y * sin_a
         y=self.x * sin_a + self.y * cos_a
         return Vector2D(x, y)

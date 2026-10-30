@@ -6,7 +6,7 @@ from core.particle_manager import ParticleManager
 from game_objects.asteroid import Asteroid
 from game_objects.game_objects import GameObject
 from game_objects.laser import Laser
-from game_objects.ship import Ship
+from game_objects.ship.ship import Ship
 from systems.vectors import Vector2D
 
 
@@ -55,7 +55,7 @@ class GameManager:
                 #pass keys list to ship, ship handles key press behavior
                 new_laser = self.ship.handle_input(keys, delta_time)
                 if new_laser:
-                    self.game_objects.append(new_laser)
+                    self.game_objects.extend(new_laser)
 
     def check_colisions(self):
         for i in range(len(self.game_objects)):
