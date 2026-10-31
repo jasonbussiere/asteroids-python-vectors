@@ -103,9 +103,9 @@ It is a strong example of building something practical and engaging from a clear
 
 ## Contact
 
-Jason Bussiere  
-GitHub: https://github.com/jasonbussiere  
-Portfolio / collaboration inquiries: open to connecting and discussing projects in Python, game development, and educational technology.
+- LinkedIn: [Jason Bussiere](https://www.linkedin.com)
+- Email: [jbussiere777@gmail.com](mailto:jbussiere777@gmail.com)
+- GitHub: [github.com/jasonbussiere](https://github.com/jasonbussiere)
 
 ## License
 
