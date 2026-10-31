@@ -86,9 +86,26 @@ This project reflects a very personal goal: using technology to make learning mo
 
 It is a reminder that the best learning often happens when we build something we can play with, test, and improve together.
 
+## Portfolio relevance
+
+This project demonstrates:
+- Python development and game logic
+- applied mathematics in software
+- object-oriented system design
+- simulation and physics-driven behavior
+- educational technology and hands-on learning
+
+It is a strong example of building something practical and engaging from a clear learning goal, while also showing creativity and technical curiosity.
+
 ## Preview
 
 ![Asteroids gameplay](https://github.com/user-attachments/assets/fc4b4353-4e61-4703-80cf-addd80291b4b)
+
+## Contact
+
+Jason Bussiere  
+GitHub: https://github.com/jasonbussiere  
+Portfolio / collaboration inquiries: open to connecting and discussing projects in Python, game development, and educational technology.
 
 ## License
 
