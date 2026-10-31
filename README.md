@@ -19,7 +19,8 @@ Sur le plan technique, tous les mouvements et la physique du jeux sont gérés p
 
 **Aperçu :**
 
-<img width="1026" height="602" alt="image" src="https://github.com/user-attachments/assets/d5ccc3f7-2b77-4477-a6da-14752846e8fc" />
+<img width="1014" height="597" alt="Asteroids_gameplay" src="https://github.com/user-attachments/assets/fc4b4353-4e61-4703-80cf-addd80291b4b" />
+
 
 
 
