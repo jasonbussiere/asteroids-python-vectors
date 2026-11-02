@@ -1,9 +1,10 @@
 from __future__ import annotations
 from abc import abstractmethod
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
+from core.object_pool import ObjectPool
 from systems.vectors import Vector2D
 
-
+GAME_POOL=ObjectPool()
 class GameObject():
     def __init__(self, x, y, color, radius):
         self.position = Vector2D(x, y)
@@ -35,22 +36,32 @@ class GameObject():
     def destroy(self):
         self.is_destroyed=True
 
+    def reset(self):
+        self.active=False
+
+    def __init_subclass__(cls, default_pool_size: int=0, **kwargs) -> None:
+        super().__init_subclass__(**kwargs)
+        # pre-allocate pool capacity as soon as the class definition loads
+        if default_pool_size > 0:
+            GAME_POOL.warm(cls, default_pool_size)
+
     # double dispatch entry point
     @abstractmethod
-    def on_impact_with(self, other:GameObject) -> None:
+    def on_impact_with(self, other:GameObject, pool=None) -> None:
         pass
 
     # default handlers , subclasses override as needed
     @abstractmethod
-    def hit_by_laser(self, laser:GameObject)-> None:
+    def hit_by_laser(self, laser:GameObject, pool=None)-> None:
         pass
 
     @abstractmethod
-    def hit_by_asteroid(self, asteroid:GameObject)-> None:
+    def hit_by_asteroid(self, asteroid:GameObject, pool=None)-> None:
         pass
 
     @abstractmethod
-    def hit_by_ship(self, ship:GameObject)-> None:
+    def hit_by_ship(self, ship:GameObject, pool=None)-> None:
         pass
+
 
     

@@ -1,9 +1,9 @@
 import math
 
 class Vector2D:
-    def __init__(self, x, y):
-        self.x=x
-        self.y=y
+    def __init__(self, x:float=0.0, y:float=0.0):
+        self.x=float(x if x is not None else 0.0)
+        self.y=float(y if y is not None else 0.0)
 
     def __add__(self, other)->'Vector2D':
         return Vector2D(self.x + other.x, self.y + other.y)
@@ -12,10 +12,12 @@ class Vector2D:
         return Vector2D(self.x - other.x, self.y - other.y)
 
     def __mul__(self, scalar)->'Vector2D':
-            return Vector2D(self.x*scalar, self.y*scalar)
+            if scalar is None:
+                return Vector2D(self.x, self.y)
+            return Vector2D(self.x * float(scalar), self.y * float(scalar))
 
-    def __rmul__(self, other):
-        pass
+    def __rmul__(self, scalar:float)->'Vector2D':
+        return self.__mul__(scalar)
 
     def __iadd__(self, other):
         self.x += other.x
@@ -26,6 +28,10 @@ class Vector2D:
         self.x -= other.x
         self.y -= other.y
         return self
+
+    def update(self, x:float, y:float):
+        self.x = x
+        self.y = y
 
     def normalize(self):
         mag = self.magnitude()

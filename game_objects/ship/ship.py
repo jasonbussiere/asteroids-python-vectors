@@ -50,7 +50,7 @@ class Ship(GameObject):
         super().update(delta_time)
         if self.weapon:
             self.weapon.update(delta_time)
-            
+
         super().update(delta_time)
 
     def draw(self, view):
@@ -81,7 +81,7 @@ class Ship(GameObject):
 
     def handle_input(self, keys, delta_time: float)->list[Laser]:
         intent=self.controls.get_intent()
-        self.angle += intent.turn * self.turn_amount
+        self.angle += (intent.turn * self.turn_amount)
         self.thrusters.is_active=intent.thrust
         if intent.thrust:
             self.thrusters.apply_thrust(self, delta_time)
@@ -93,8 +93,8 @@ class Ship(GameObject):
         return projectiles
 
     #Colision double disacth behavior
-    def on_impact_with(self, other):
+    def on_impact_with(self, other, pool=None):
         other.hit_by_ship(self)
 
-    def hit_by_asteroid(self, asteroid):
+    def hit_by_asteroid(self, asteroid, pool=None):
         self.destroy()

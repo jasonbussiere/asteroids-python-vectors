@@ -20,8 +20,10 @@ running = True
 while running:
     # calculate delta time and tick the clock
     delta_time=clock.tick(60)/1000.0
+
     # get state of all keyboard keys
     keys=pygame.key.get_pressed()
+    
     #handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -31,7 +33,7 @@ while running:
 
     #process key press inputs
     game_manager.process_inputs(keys, delta_time)
-    
+
     # Update movement
     game_manager.update(delta_time)
 
