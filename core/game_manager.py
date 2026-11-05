@@ -8,7 +8,7 @@ from game_objects.asteroid import Asteroid
 from game_objects.game_objects import GameObject
 from game_objects.laser import Laser
 from game_objects.ship.ship import Ship
-from systems.vectors import Vector2D
+from math.vectors import Vector2D
 
 
 

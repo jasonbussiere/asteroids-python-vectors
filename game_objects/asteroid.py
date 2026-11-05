@@ -5,7 +5,7 @@ import pygame
 
 from core.constants import AST_COLOR, AST_LG_RADIUS, MIN_AST_RADIUS
 from game_objects.game_objects import GameObject
-from systems.vectors import Vector2D
+from math.vectors import Vector2D
 
 class Asteroid(GameObject):
     def __init__(self, x:float=0.0, y:float=0.0,ast_color=AST_COLOR, ast_size=AST_LG_RADIUS):
@@ -94,8 +94,6 @@ class Asteroid(GameObject):
         self.destroy()
         self.scored=True
         self.fragments = self.split(pool=pool)
-
-    # TODO asteroid factory / Object pool (asteroid/laser)
 
     
 

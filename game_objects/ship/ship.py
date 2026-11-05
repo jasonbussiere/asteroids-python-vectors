@@ -7,7 +7,7 @@ import pygame
 from core.constants import FRICTION, SHIP_COLOR, SHIP_RADIUS, TURN_AMOUNT
 from game_objects.game_objects import GameObject
 from game_objects.ship.ship_strategies import ControlStrategy, KeyboardControlStrategy, SingleLaserStrategy, StandardThrusterStrategy, ThrustStrategy, WeaponStrategy
-from systems.vectors import Vector2D
+from math.vectors import Vector2D
 
 
 

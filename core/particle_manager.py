@@ -1,5 +1,5 @@
 from game_objects.particle import Particle
-from systems.vectors import Vector2D
+from math.vectors import Vector2D
 
 
 class ParticleManager:

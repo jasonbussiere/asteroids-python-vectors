@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from systems.vectors import Vector2D
+from math.vectors import Vector2D
 
 #*****************************************************#
 #** Controls Strategy
