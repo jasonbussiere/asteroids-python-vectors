@@ -6,7 +6,6 @@ import pygame
 
 from core.constants import FRICTION, SHIP_COLOR, SHIP_RADIUS, TURN_AMOUNT
 from game_objects.game_objects import GameObject
-from game_objects.laser import Laser
 from game_objects.ship.ship_strategies import ControlStrategy, KeyboardControlStrategy, SingleLaserStrategy, StandardThrusterStrategy, ThrustStrategy, WeaponStrategy
 from systems.vectors import Vector2D
 
@@ -46,12 +45,11 @@ class Ship(GameObject):
         return Vector2D(0, -1).rotate(self.angle)
 
     def update(self, delta_time):
-        self.velocity *= FRICTION ** delta_time
+        self.velocity *= self.friction ** delta_time
         super().update(delta_time)
         if self.weapon:
             self.weapon.update(delta_time)
 
-        super().update(delta_time)
 
     def draw(self, view):
         self.thrusters.draw_flames(view, self)
@@ -79,18 +77,17 @@ class Ship(GameObject):
             (left_pos.x, left_pos.y),
         ]
 
-    def handle_input(self, keys, delta_time: float)->list[Laser]:
-        intent=self.controls.get_intent()
-        self.angle += (intent.turn * self.turn_amount)
+    def handle_input(self, keys, delta_time: float)->bool:
+        intent=self.controls.get_intent(keys)
+        self.angle += intent.turn * self.turn_amount * delta_time
         self.thrusters.is_active=intent.thrust
         if intent.thrust:
             self.thrusters.apply_thrust(self, delta_time)
 
-        projectiles=[]
         if intent.fire:
-            projectiles.extend(self.weapon.fire(self))
+            return self.weapon.fire(self)
 
-        return projectiles
+        return False
 
     #Colision double disacth behavior
     def on_impact_with(self, other, pool=None):

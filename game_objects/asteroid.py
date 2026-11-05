@@ -7,14 +7,14 @@ from core.constants import AST_COLOR, AST_LG_RADIUS, MIN_AST_RADIUS
 from game_objects.game_objects import GameObject
 from systems.vectors import Vector2D
 
-class Asteroid(GameObject, default_pool_size=20):
+class Asteroid(GameObject):
     def __init__(self, x:float=0.0, y:float=0.0,ast_color=AST_COLOR, ast_size=AST_LG_RADIUS):
         super().__init__(x, y, color=ast_color, radius=ast_size)
         self.reconfigure(Vector2D(x,y), ast_color, ast_size)
 
     def reconfigure(self, position:Vector2D, ast_color=AST_COLOR, ast_size=AST_LG_RADIUS):
         """Intitializes or resets asteroids parameters for ObjectPool recycling"""
-        self.position=position
+        self.position=Vector2D(position.x, position.y)
         self.color=ast_color
         self.radius=ast_size
         self.is_destroyed=False
@@ -42,8 +42,8 @@ class Asteroid(GameObject, default_pool_size=20):
         return points
 
     def setup_at(self, pos: Vector2D, radius: int = AST_LG_RADIUS):
-                """Configure position and regenerates shape for pooled instances."""
-                self.reconfigure(pos, ast_color=AST_COLOR, ast_size=AST_LG_RADIUS)
+        """Configure position and regenerate shape for pooled instances."""
+        self.reconfigure(pos, ast_color=AST_COLOR, ast_size=radius)
 
     def reset(self):
         """Clears active/destruction flags before returning to vault"""

@@ -1,10 +1,8 @@
 from __future__ import annotations
-from abc import abstractmethod
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
-from core.object_pool import ObjectPool
 from systems.vectors import Vector2D
 
-GAME_POOL=ObjectPool()
+
 class GameObject():
     def __init__(self, x, y, color, radius):
         self.position = Vector2D(x, y)
@@ -28,10 +26,10 @@ class GameObject():
         self.position.x %= width
         self.position.y %= height
 
-    def has_collided_with(self,other:GameObject)-> None:
-        distance_sqared=self.position.distance_to_squared(other.position)
+    def has_collided_with(self, other: GameObject) -> bool:
+        distance_squared = self.position.distance_to_squared(other.position)
         radii_sum_squared=(self.radius + other.radius)**2
-        return distance_sqared < radii_sum_squared
+        return distance_squared < radii_sum_squared
 
     def destroy(self):
         self.is_destroyed=True
@@ -39,29 +37,19 @@ class GameObject():
     def reset(self):
         self.active=False
 
-    def __init_subclass__(cls, default_pool_size: int=0, **kwargs) -> None:
-        super().__init_subclass__(**kwargs)
-        # pre-allocate pool capacity as soon as the class definition loads
-        if default_pool_size > 0:
-            GAME_POOL.warm(cls, default_pool_size)
-
     # double dispatch entry point
-    @abstractmethod
     def on_impact_with(self, other:GameObject, pool=None) -> None:
-        pass
+        return None
 
     # default handlers , subclasses override as needed
-    @abstractmethod
     def hit_by_laser(self, laser:GameObject, pool=None)-> None:
-        pass
+        return None
 
-    @abstractmethod
     def hit_by_asteroid(self, asteroid:GameObject, pool=None)-> None:
-        pass
+        return None
 
-    @abstractmethod
     def hit_by_ship(self, ship:GameObject, pool=None)-> None:
-        pass
+        return None
 
 
     

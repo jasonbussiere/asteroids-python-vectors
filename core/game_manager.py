@@ -30,6 +30,7 @@ class GameManager:
         self.score=0
 
     def init_game_objects(self):
+        self.reset_game()
         # Track game state
         self.is_game_over=False
         self.score=0
@@ -42,18 +43,23 @@ class GameManager:
         return self.game_objects
 
     def spawn_laser(self):
-        """Fetch a laser from the pool and it to the active scene."""
+        """Fetch a laser from the pool and add it to the active scene."""
         ship = self.ship
         if ship is None:
             return
 
         laser=self.pool.get(Laser)
-        laser.fire(ship.position, ship.heading, ship_velocity=ship.velocity)
+        laser.fire(
+            ship.position,
+            ship.heading,
+            speed=ship.weapon.laser_speed,
+            ship_velocity=ship.velocity,
+        )
         self.game_objects.append(laser)
 
 
     def spawn_asteroids(self, count: int):
-        """Fetch a laser from the pool and add it to the active game objects list."""
+        """Fetch asteroids from the pool and add them to the active game objects list."""
         for _ in range(count):
             pos=self.get_random_edge_position()
             asteroid = self.pool.get(Asteroid)
@@ -90,9 +96,9 @@ class GameManager:
                     continue
                 
                 if not a.is_destroyed and not b.is_destroyed:
-                    if a.position.distance_to(b.position) < (a.radius + b.radius):
-                        a.on_impact_with(b)
-                        b.on_impact_with(a)
+                    if a.has_collided_with(b):
+                        a.on_impact_with(b, pool=self.pool)
+                        b.on_impact_with(a, pool=self.pool)
 
     def clean_up_objects(self):
         surviving_objects=[]
@@ -144,7 +150,10 @@ class GameManager:
         self.particle_manager.update(delta_time)
 
     def reset_game(self):
-        """Clean up active objects on player death/game over."""
+        """Release active pooled objects and clear transient game state."""
         for obj in self.game_objects:
-            self.pool.release(obj)
+            if isinstance(obj, (Laser, Asteroid)):
+                self.pool.release(obj)
         self.game_objects.clear()
+        self.particle_manager.clear()
+        self.ship = None

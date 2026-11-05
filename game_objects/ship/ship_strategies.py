@@ -3,7 +3,6 @@ import random
 
 import pygame
 
-from game_objects.laser import Laser
 from systems.vectors import Vector2D
 
 #*****************************************************#
@@ -25,7 +24,7 @@ class ShipIntent:
 #interface
 class ControlStrategy(ABC):
     @abstractmethod
-    def get_intent(self)->ShipIntent:
+    def get_intent(self, keys)->ShipIntent:
         raise NotImplementedError
 
 #concrete strategy for human player keyboard controls
@@ -33,8 +32,7 @@ class KeyboardControlStrategy(ControlStrategy):
     def __init__(self)->None:
         self.previous_fire_state:bool=False
 
-    def get_intent(self)->ShipIntent:
-        keys=pygame.key.get_pressed()
+    def get_intent(self, keys)->ShipIntent:
         turn_val:float=0.0
         if keys[pygame.K_LEFT]:
             turn_val -= 1.0
@@ -114,28 +112,25 @@ class StandardThrusterStrategy(ThrustStrategy):
 #*****************************************************#
 
 class WeaponStrategy(ABC):
-    def __init__(self, cooldown_delay: float=0.25)->None:
+    def __init__(self, cooldown_delay: float=0.25, laser_speed: float=500.0)->None:
         self.cooldown_delay=cooldown_delay
         self.cooldown_timer=0.0
+        self.laser_speed=laser_speed
 
     def update(self, delta_time:float)->None:
         if self.cooldown_timer > 0:
             self.cooldown_timer -= delta_time
 
     @abstractmethod
-    def fire(self, ship)->list[Laser]:
+    def fire(self, ship)->bool:
         raise NotImplementedError
 
 class SingleLaserStrategy(WeaponStrategy):
     def __init__(self, laser_speed:float=600, cooldown_delay:float=0.15):
-        super().__init__(cooldown_delay)
-        self.laser_speed=laser_speed
+        super().__init__(cooldown_delay, laser_speed)
 
-    def fire(self, ship)->list[Laser]:
+    def fire(self, ship)->bool:
         if self.cooldown_timer <= 0:
             self.cooldown_timer = self.cooldown_delay
-            muzzle_pos=ship.position + (ship.heading * ship.radius)
-            laser_velocity=ship.velocity + (ship.heading * self.laser_speed)
-            return [Laser(muzzle_pos.x, muzzle_pos.y, laser_velocity)]
-        return []
-
+            return True
+        return False

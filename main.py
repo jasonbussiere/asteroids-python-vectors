@@ -6,48 +6,40 @@ from core.game_manager import GameManager
 from core.ui_manager import UIManager
 
 
-#intialize pygame engine
-pygame.init()
-pygame.display.set_caption("Asteroids")
-view = pygame.display.set_mode((1024, 576))
-clock=pygame.time.Clock()
-game_manager=GameManager(view)
-game_objects=game_manager.init_game_objects()
-ui_manager=UIManager()
+def main():
+    pygame.init()
+    pygame.display.set_caption("Asteroids")
+    view = pygame.display.set_mode((1024, 576))
+    clock = pygame.time.Clock()
+    game_manager = GameManager(view)
+    game_manager.init_game_objects()
+    ui_manager = UIManager()
 
-#game loop
-running = True
-while running:
-    # calculate delta time and tick the clock
-    delta_time=clock.tick(60)/1000.0
+    running = True
+    while running:
+        delta_time = clock.tick(60) / 1000.0
 
-    # get state of all keyboard keys
-    keys=pygame.key.get_pressed()
-    
-    #handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running=False
-        elif keys[pygame.K_SPACE] and game_manager.is_game_over:
-            game_manager.init_game_objects()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif (event.type == pygame.KEYDOWN
+                    and event.key == pygame.K_SPACE
+                    and game_manager.is_game_over):
+                game_manager.init_game_objects()
 
-    #process key press inputs
-    game_manager.process_inputs(keys, delta_time)
+        keys = pygame.key.get_pressed()
+        game_manager.process_inputs(keys, delta_time)
+        game_manager.update(delta_time)
+        game_manager.check_colisions()
+        game_manager.clean_up_objects()
 
-    # Update movement
-    game_manager.update(delta_time)
+        view.fill((0, 0, 0))
+        game_manager.draw(view)
+        ui_manager.draw(view, game_manager.score, game_manager.is_game_over)
+        pygame.display.flip()
 
-    # Check colisions & state
-    game_manager.check_colisions()
+    pygame.quit()
 
-    #clean up
-    game_manager.clean_up_objects()
 
-    # Render
-    view.fill((0,0,0))
-    game_manager.draw(view)
-    # Draw the UI overlay using data from the GameManager
-    ui_manager.draw(view, game_manager.score, game_manager.is_game_over)
-    pygame.display.flip() #update the screen
-
-pygame.quit()
+if __name__ == "__main__":
+    main()

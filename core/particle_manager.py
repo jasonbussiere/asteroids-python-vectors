@@ -15,6 +15,9 @@ class ParticleManager:
             particle.update(delta_time)
         self.particles= [p for p in self.particles if not p.is_destroyed]
 
+    def clear(self):
+        self.particles.clear()
+
     def draw(self, view):
         for particle in self.particles:
             particle.draw(view)

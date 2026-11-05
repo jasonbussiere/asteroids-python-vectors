@@ -5,7 +5,7 @@ from core.constants import LASER_COLOR, LASER_LIFETIME, LASER_RADIUS
 from game_objects.game_objects import GameObject
 from systems.vectors import Vector2D
 
-class Laser(GameObject, default_pool_size=50):
+class Laser(GameObject):
     def __init__(
             self,
             x=0.0,
@@ -32,11 +32,9 @@ class Laser(GameObject, default_pool_size=50):
         self.position.x=position.x
         self.position.y=position.y
 
-        self.velocity.x = heading.x * speed
-        self.velocity.y = heading.y * speed
-
-        
-        
+        self.velocity = heading * speed
+        if ship_velocity is not None:
+            self.velocity += ship_velocity
 
     def draw(self, view):
         # draw line segment behind position based on velocity direction
@@ -53,8 +51,7 @@ class Laser(GameObject, default_pool_size=50):
 
     def wrap_around(self, width, height):
         if self.is_active:
-            return
-        pass
+            super().wrap_around(width, height)
 
     def update(self, delta_time):
         if not self.is_active or self.is_destroyed:
@@ -76,5 +73,4 @@ class Laser(GameObject, default_pool_size=50):
     def on_impact_with(self, other: GameObject, pool=None) -> None:
         other.hit_by_laser(self, pool=pool)
         self.destroy()
-
 

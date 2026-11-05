@@ -21,6 +21,7 @@ class ObjectPool:
         reset = getattr(obj, "reset", None)
         if callable(reset):
             reset()
+        self._vault.setdefault(type(obj), []).append(obj)
 
     def warm(self, cls: Type[T], count: int):
         """pre-allocates instances for a specific class."""
