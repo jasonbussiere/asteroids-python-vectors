@@ -103,7 +103,7 @@ It is a strong example of building something practical and engaging from a clear
 
 ## Contact
 
-- LinkedIn: [Jason Bussiere](https://www.linkedin.com)
+- LinkedIn: [Jason Bussiere](www.linkedin.com/in/jasonbussiere)
 - Email: [jbussiere777@gmail.com](mailto:jbussiere777@gmail.com)
 - GitHub: [github.com/jasonbussiere](https://github.com/jasonbussiere)
 
