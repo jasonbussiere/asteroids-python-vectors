@@ -3,7 +3,7 @@ import pygame
 
 from core.constants import LASER_COLOR, LASER_LIFETIME, LASER_RADIUS
 from game_objects.game_objects import GameObject
-from math.vectors import Vector2D
+from vector_math.vectors import Vector2D
 
 class Laser(GameObject):
     def __init__(

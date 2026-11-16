@@ -1,6 +1,6 @@
 from __future__ import annotations
 from core.constants import VIEW_HEIGHT, VIEW_WIDTH
-from math.vectors import Vector2D
+from vector_math.vectors import Vector2D
 
 
 class GameObject():

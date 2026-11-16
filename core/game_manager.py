@@ -1,14 +1,14 @@
 from __future__ import annotations
 import random
 
-from core.constants import VIEW_HEIGHT, VIEW_WIDTH
+from core.constants import DEFAULT_AST_COUNT, MAX_WAVE, VIEW_HEIGHT, VIEW_WIDTH
 from core.object_pool import ObjectPool
 from core.particle_manager import ParticleManager
 from game_objects.asteroid import Asteroid
 from game_objects.game_objects import GameObject
 from game_objects.laser import Laser
 from game_objects.ship.ship import Ship
-from math.vectors import Vector2D
+from vector_math.vectors import Vector2D
 
 
 
@@ -27,18 +27,24 @@ class GameManager:
         self.game_objects: list[GameObject]=[]
         self.particle_manager=ParticleManager()
         self.is_game_over=False
+        self.is_game_won=False
         self.score=0
+        self.wave=1
+        self.ast_count=DEFAULT_AST_COUNT
 
     def init_game_objects(self):
         self.reset_game()
         # Track game state
         self.is_game_over=False
+        self.is_game_won=False
         self.score=0
+        self.wave=1
+        self.ast_count=DEFAULT_AST_COUNT
         
         #instantiate game objects
         self.ship=Ship(self.view.get_width()/2, self.view.get_height()/2)
         self.game_objects=[self.ship]
-        self.spawn_asteroids(count=4)
+        self.spawn_asteroids(count=self.ast_count)
         
         return self.game_objects
 
@@ -58,7 +64,7 @@ class GameManager:
         self.game_objects.append(laser)
 
 
-    def spawn_asteroids(self, count: int):
+    def spawn_asteroids(self, count: int ):
         """Fetch asteroids from the pool and add them to the active game objects list."""
         for _ in range(count):
             pos=self.get_random_edge_position()
@@ -84,10 +90,10 @@ class GameManager:
                 if has_fired:
                     self.spawn_laser()
 
-    def check_colisions(self):
+    def check_collisions(self):
         for i in range(len(self.game_objects)):
             for j in range(i+1, len(self.game_objects)):
-                #only check colisions if both are still alive!
+                #only check collisions if both are still alive!
                 a: GameObject=self.game_objects[i]
                 b: GameObject=self.game_objects[j]
 
@@ -105,7 +111,7 @@ class GameManager:
 
         for obj in self.game_objects:
             if obj.is_destroyed:
-                # spawn exploison particles
+                # spawn explosion particles
                 if isinstance(obj, Asteroid):
                     particle_count=12 if obj.radius<20 else 25
                     self.particle_manager.create_explosion(
@@ -157,3 +163,17 @@ class GameManager:
         self.game_objects.clear()
         self.particle_manager.clear()
         self.ship = None
+
+    def next_wave(self):
+        if self.is_game_over or self.is_game_won or any(
+            isinstance(obj, Asteroid) for obj in self.game_objects
+        ):
+            return
+
+        if self.wave >= MAX_WAVE:
+            self.is_game_won = True
+            return
+
+        self.wave += 1
+        self.ast_count += 2
+        self.spawn_asteroids(self.ast_count)

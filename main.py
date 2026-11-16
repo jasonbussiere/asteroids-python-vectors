@@ -22,20 +22,22 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             elif (event.type == pygame.KEYDOWN
                     and event.key == pygame.K_SPACE
-                    and game_manager.is_game_over):
+                    and (game_manager.is_game_over or game_manager.is_game_won)):
                 game_manager.init_game_objects()
 
         keys = pygame.key.get_pressed()
         game_manager.process_inputs(keys, delta_time)
         game_manager.update(delta_time)
-        game_manager.check_colisions()
+        game_manager.check_collisions()
         game_manager.clean_up_objects()
+        game_manager.next_wave()
 
         view.fill((0, 0, 0))
         game_manager.draw(view)
-        ui_manager.draw(view, game_manager.score, game_manager.is_game_over)
+        ui_manager.draw(view, game_manager.score, game_manager.wave, game_manager.is_game_over, game_manager.is_game_won)
         pygame.display.flip()
 
     pygame.quit()

@@ -7,7 +7,7 @@ import pygame
 from core.constants import FRICTION, SHIP_COLOR, SHIP_RADIUS, TURN_AMOUNT
 from game_objects.game_objects import GameObject
 from game_objects.ship.ship_strategies import ControlStrategy, KeyboardControlStrategy, SingleLaserStrategy, StandardThrusterStrategy, ThrustStrategy, WeaponStrategy
-from math.vectors import Vector2D
+from vector_math.vectors import Vector2D
 
 
 
@@ -89,7 +89,7 @@ class Ship(GameObject):
 
         return False
 
-    #Colision double disacth behavior
+    #Collision double disacth behavior
     def on_impact_with(self, other, pool=None):
         other.hit_by_ship(self)
 

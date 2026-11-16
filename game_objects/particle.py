@@ -3,7 +3,7 @@ import random
 import pygame
 
 from game_objects.game_objects import GameObject
-from math.vectors import Vector2D
+from vector_math.vectors import Vector2D
 
 
 class Particle(GameObject):
