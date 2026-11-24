@@ -172,6 +172,7 @@ class GameManager:
 
         if self.wave >= MAX_WAVE:
             self.is_game_won = True
+            self.is_game_over = True
             return
 
         self.wave += 1

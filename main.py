@@ -2,6 +2,7 @@
 
 import pygame
 
+from core.constants import VIEW_HEIGHT, VIEW_WIDTH
 from core.game_manager import GameManager
 from core.ui_manager import UIManager
 
@@ -9,7 +10,7 @@ from core.ui_manager import UIManager
 def main():
     pygame.init()
     pygame.display.set_caption("Asteroids")
-    view = pygame.display.set_mode((1024, 576))
+    view = pygame.display.set_mode((VIEW_WIDTH, VIEW_HEIGHT))
     clock = pygame.time.Clock()
     game_manager = GameManager(view)
     game_manager.init_game_objects()
